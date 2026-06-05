@@ -1,11 +1,12 @@
 package co.istad.productapi.rescontroller;
 
-import co.istad.productapi.dto.ProductRequest;
-import co.istad.productapi.dto.ProductResponse;
-import co.istad.productapi.dto.UpdateProductRequest;
+import co.istad.productapi.dto.product.request.ProductRequest;
+import co.istad.productapi.dto.product.response.ProductResponse;
+import co.istad.productapi.dto.product.request.UpdateProductRequest;
 import co.istad.productapi.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,11 @@ public class ProductRestController {
     @PatchMapping("/{id}")
     public ProductResponse updateProduct (@PathVariable Integer id , @RequestBody UpdateProductRequest request){
         return productService.updateProduct(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }

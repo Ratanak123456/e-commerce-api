@@ -1,4 +1,4 @@
-package co.istad.productapi.dto;
+package co.istad.productapi.dto.product.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,10 +1,8 @@
 package co.istad.productapi.service;
 
-import co.istad.productapi.dto.ProductRequest;
-import co.istad.productapi.dto.ProductResponse;
-import co.istad.productapi.dto.UpdateProductRequest;
-import co.istad.productapi.entity.Product;
-import org.springframework.stereotype.Service;
+import co.istad.productapi.dto.product.request.ProductRequest;
+import co.istad.productapi.dto.product.response.ProductResponse;
+import co.istad.productapi.dto.product.request.UpdateProductRequest;
 
 import java.util.List;
 

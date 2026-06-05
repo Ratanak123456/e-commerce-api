@@ -1,24 +1,23 @@
 package co.istad.productapi.service.implement;
 
-import co.istad.productapi.dto.ProductRequest;
-import co.istad.productapi.dto.ProductResponse;
-import co.istad.productapi.dto.UpdateProductRequest;
+import co.istad.productapi.dto.product.request.ProductRequest;
+import co.istad.productapi.dto.product.response.ProductResponse;
+import co.istad.productapi.dto.product.request.UpdateProductRequest;
 import co.istad.productapi.entity.Product;
 import co.istad.productapi.rescontroller.repository.ProductRepository;
 import co.istad.productapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.support.DefaultLifecycleProcessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImplement implements ProductService {
 
     private final ProductRepository productRepository;
-    private final DefaultLifecycleProcessor defaultLifecycleProcessor;
     private Integer nextId = 1004;
 
     private ProductResponse mapToResponse (Product product){
@@ -94,6 +93,11 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public boolean deleteProduct(Integer id) {
-        return false;
+        var isDeleted = productRepository.deleteProductById(id);
+        if (!isDeleted) {
+            throw new NoSuchElementException("Product with ID: " + id + " Not Found");
+        }
+
+        return true;
     }
 }

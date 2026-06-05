@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 public class RestControllerAdvisor {
     //handle not found issue
 
+    @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse<?>> handleNoSuchElementException (NoSuchElementException noSuchElementException){
         return new ResponseEntity<>(
                 ErrorResponse.builder()

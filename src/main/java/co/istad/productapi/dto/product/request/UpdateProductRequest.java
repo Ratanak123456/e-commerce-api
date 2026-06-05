@@ -1,4 +1,4 @@
-package co.istad.productapi.dto;
+package co.istad.productapi.dto.product.request;
 
 public record UpdateProductRequest(
         String name,
