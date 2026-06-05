@@ -8,6 +8,7 @@ import co.istad.productapi.rescontroller.repository.ProductRepository;
 import co.istad.productapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultLifecycleProcessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,9 @@ import java.util.List;
 public class ProductServiceImplement implements ProductService {
 
     private final ProductRepository productRepository;
+    private final DefaultLifecycleProcessor defaultLifecycleProcessor;
     private Integer nextId = 1004;
+
     private ProductResponse mapToResponse (Product product){
         return new ProductResponse(
                 product.getId(),
@@ -39,6 +42,7 @@ public class ProductServiceImplement implements ProductService {
     public ProductResponse createProduct(ProductRequest productRequest) {
 
         var newProduct = mapToEntity(productRequest);
+
         newProduct.setUserId(1);
         newProduct.setId(nextId++);
         return mapToResponse(productRepository.createProduct(newProduct));
@@ -89,7 +93,7 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(int id) {
+    public boolean deleteProduct(Integer id) {
         return false;
     }
 }

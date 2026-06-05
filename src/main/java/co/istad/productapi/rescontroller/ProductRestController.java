@@ -4,6 +4,7 @@ import co.istad.productapi.dto.ProductRequest;
 import co.istad.productapi.dto.ProductResponse;
 import co.istad.productapi.dto.UpdateProductRequest;
 import co.istad.productapi.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ProductResponse createProduct(@RequestBody ProductRequest request){
+    public ProductResponse createProduct(@Valid @RequestBody ProductRequest request){
         return productService.createProduct(request);
     }
 

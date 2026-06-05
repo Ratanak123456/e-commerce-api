@@ -13,6 +13,6 @@ public interface ProductService {
     List<ProductResponse> findAllProduct();
     ProductResponse findProductById(Integer id);
     ProductResponse updateProduct (Integer id , UpdateProductRequest updateProductRequest);
-    boolean deleteProduct(int id);
+    boolean deleteProduct(Integer id);
 
 }
