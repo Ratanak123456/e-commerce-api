@@ -7,10 +7,9 @@ import co.istad.productapi.dto.product.request.UpdateProductRequest;
 import java.util.List;
 
 public interface ProductService {
-    ProductResponse createProduct(ProductRequest productRequest);
-    List<ProductResponse> findAllProduct();
+    ProductResponse createProduct(ProductRequest product);
+    List<ProductResponse> findAllProducts();
     ProductResponse findProductById(Integer id);
-    ProductResponse updateProduct (Integer id , UpdateProductRequest updateProductRequest);
+    ProductResponse updateProduct(Integer id, UpdateProductRequest request);
     boolean deleteProduct(Integer id);
-
 }

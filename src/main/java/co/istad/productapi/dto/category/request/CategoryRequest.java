@@ -1,13 +1,15 @@
 package co.istad.productapi.dto.category.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record CategoryRequest(
-        @NotBlank(message = "Please Input the name")
+        @Size(min = 1, max = 100)
         String name,
-        @NotBlank(message = "Don't for get the Description!!!")
-        String des,
-        @NotBlank(message = "Please Insert Ur Icon")
-        String icon
+        @Size(min = 1, max = 255)
+        String description
+
 ) {
 }

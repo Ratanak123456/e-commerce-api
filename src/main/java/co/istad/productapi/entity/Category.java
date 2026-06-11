@@ -15,16 +15,14 @@ import java.util.List;
 
 @Entity(name = "categories")
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String slug;
-    private String des;
-    private String icon;
-    private Boolean isDeleted;
+    private String description;
 
+    // one category can have many products
     @OneToMany(mappedBy = "category")
-    private List<Product> productList ;
+    private List<Product> products;
+
 }

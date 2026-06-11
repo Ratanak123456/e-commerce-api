@@ -7,9 +7,11 @@ import co.istad.productapi.dto.category.response.CategoryResponse;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryResponse createCategory(CategoryRequest categoryRequest);
-    List<CategoryResponse> getAllCategories();
-    CategoryResponse getCategoryById(Integer id);
-    CategoryResponse updateCategory(Integer id, UpdateCategoryRequest updateCategoryRequest);
-    boolean deleteCategory(Integer id);
+    CategoryResponse createCategory(CategoryRequest request);
+    CategoryResponse updateCategory(CategoryRequest request);
+    Boolean deleteCategory(Integer id);
+    List<CategoryResponse> findAll();
+    CategoryResponse findById(Integer id);
+    List<CategoryResponse> findByName(String name);
+
 }
