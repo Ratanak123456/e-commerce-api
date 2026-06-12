@@ -3,6 +3,7 @@ package co.istad.productapi.service.implement;
 import co.istad.productapi.advisor.ResourceAlreadyExistException;
 import co.istad.productapi.dto.category.request.CategoryRequest;
 import co.istad.productapi.dto.category.request.UpdateCategoryRequest;
+import co.istad.productapi.dto.category.request.CategoryDeleteRequest;
 import co.istad.productapi.dto.category.response.CategoryResponse;
 import co.istad.productapi.entity.Category;
 
@@ -54,16 +55,17 @@ public class CategoryServiceImplement implements CategoryService {
         categoryRepository.save(existingCategory);
         return categoryMapper.toResponse(existingCategory);
     }
-// soft delete
 
     @Override
-    public void deleteCategory(Integer id) {
-        var existingCategory = categoryRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(()-> new NoSuchElementException("Category with ID = "+id+" not found"));
+    public CategoryResponse deleteCategory(Integer id, CategoryDeleteRequest request) {
+        var existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Category with ID = " + id + " not found"));
 
-        existingCategory.setIsDeleted(true);
+        existingCategory.setIsDeleted(request.isDeleted());
         categoryRepository.save(existingCategory);
+        return categoryMapper.toResponse(existingCategory);
     }
+// soft delete
 
     @Override
     public List<CategoryResponse> findAll() {

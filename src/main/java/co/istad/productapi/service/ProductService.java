@@ -3,6 +3,7 @@ package co.istad.productapi.service;
 import co.istad.productapi.dto.product.request.ProductRequest;
 import co.istad.productapi.dto.product.response.ProductResponse;
 import co.istad.productapi.dto.product.request.UpdateProductRequest;
+import co.istad.productapi.dto.product.request.ProductDeleteRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,5 +22,5 @@ public interface ProductService {
 
     ProductResponse findProductById(Integer id);
     ProductResponse updateProduct(Integer id, UpdateProductRequest request);
-    void deleteProduct(Integer id);
+    ProductResponse deleteProduct(Integer id, ProductDeleteRequest request);
 }

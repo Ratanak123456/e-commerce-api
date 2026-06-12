@@ -3,6 +3,7 @@ package co.istad.productapi.service.implement;
 import co.istad.productapi.dto.product.request.ProductRequest;
 import co.istad.productapi.dto.product.response.ProductResponse;
 import co.istad.productapi.dto.product.request.UpdateProductRequest;
+import co.istad.productapi.dto.product.request.ProductDeleteRequest;
 import co.istad.productapi.entity.Product;
 import co.istad.productapi.mapper.ProductMapper;
 import co.istad.productapi.repository.ProductRepositoryJPA;
@@ -83,14 +84,14 @@ public class ProductServiceImplement implements ProductService {
 
 
 
-    // TODO: make it like we delete in the category
     @Override
-    public void deleteProduct(Integer id) {
-        var existingProduct = productRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(()-> new NoSuchElementException("Product with ID = "+id+" not found"));
+    public ProductResponse deleteProduct(Integer id, ProductDeleteRequest request) {
+        var existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Product with ID = " + id + " not found"));
 
-        existingProduct.setIsDeleted(true);
+        existingProduct.setIsDeleted(request.isDeleted());
         productRepository.save(existingProduct);
+        return productMapper.mapToResponse(existingProduct);
     }
 
 

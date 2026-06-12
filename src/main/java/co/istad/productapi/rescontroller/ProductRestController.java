@@ -3,6 +3,7 @@ package co.istad.productapi.rescontroller;
 import co.istad.productapi.dto.product.request.ProductRequest;
 import co.istad.productapi.dto.product.response.ProductResponse;
 import co.istad.productapi.dto.product.request.UpdateProductRequest;
+import co.istad.productapi.dto.product.request.ProductDeleteRequest;
 import co.istad.productapi.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +42,9 @@ public class ProductRestController {
         return productService.updateProduct(id, request);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable Integer id) {
-        productService.deleteProduct(id);
+    @PatchMapping("/delete/{id}")
+    public ProductResponse deleteProduct(@PathVariable Integer id, @RequestBody ProductDeleteRequest request){
+        return productService.deleteProduct(id, request);
     }
 
 }

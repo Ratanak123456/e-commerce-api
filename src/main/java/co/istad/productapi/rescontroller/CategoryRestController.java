@@ -2,6 +2,7 @@ package co.istad.productapi.rescontroller;
 
 import co.istad.productapi.dto.category.request.CategoryRequest;
 import co.istad.productapi.dto.category.request.UpdateCategoryRequest;
+import co.istad.productapi.dto.category.request.CategoryDeleteRequest;
 import co.istad.productapi.dto.category.response.CategoryResponse;
 import co.istad.productapi.service.CategoryService;
 import jakarta.validation.Valid;
@@ -38,10 +39,8 @@ public class CategoryRestController {
         return categoryService.updateCategory(id, request);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Integer id) {
-        categoryService.deleteCategory(id);
-
+    @PatchMapping("/delete/{id}")
+    public CategoryResponse deleteCategory(@PathVariable Integer id, @RequestBody CategoryDeleteRequest request){
+        return categoryService.deleteCategory(id, request);
     }
 }
