@@ -32,8 +32,8 @@ public class CategoryRestController {
     }
 
     @DeleteMapping("/{id}")
-    public Boolean deleteCategory(@PathVariable Integer id) {
-        return categoryService.deleteCategory(id);
+    public void deleteCategory(@PathVariable Integer id) {
+         categoryService.deleteCategory(id);
 
     }
 }

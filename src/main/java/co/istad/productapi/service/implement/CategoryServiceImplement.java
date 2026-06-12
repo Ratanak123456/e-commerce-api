@@ -1,5 +1,6 @@
 package co.istad.productapi.service.implement;
 
+import co.istad.productapi.advisor.ResourceAlreadyExistException;
 import co.istad.productapi.dto.category.request.CategoryRequest;
 import co.istad.productapi.dto.category.request.UpdateCategoryRequest;
 import co.istad.productapi.dto.category.response.CategoryResponse;
@@ -29,7 +30,7 @@ public class CategoryServiceImplement implements CategoryService {
         // TODO: check if the name already exist
         if(categoryRepository.existsByName(request.name())){
             // throw exception handler
-            throw new RuntimeException("category already exists");
+            throw new ResourceAlreadyExistException("category already exists");
         }
 
         var newCategory = categoryRepository.save(category);
@@ -43,12 +44,11 @@ public class CategoryServiceImplement implements CategoryService {
 
 
     @Override
-    public Boolean deleteCategory(Integer id) {
-        if(categoryRepository.existsById(id)) {
-            categoryRepository.deleteById(id);
-            return true;
+    public void deleteCategory(Integer id) {
+        if(!categoryRepository.existsById(id)) {
+            throw new NoSuchElementException("Category with id = " + id +" Does not exist ");
         }
-        return false;
+        categoryRepository.deleteById(id);
     }
 
     @Override
