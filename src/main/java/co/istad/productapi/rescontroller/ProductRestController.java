@@ -6,9 +6,10 @@ import co.istad.productapi.dto.product.request.UpdateProductRequest;
 import co.istad.productapi.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class ProductRestController {
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductResponse> getProducts() {
-        return productService.findAllProducts();
+    public Page<ProductResponse> getProducts(Pageable pageable) {
+        return productService.findAllProducts(pageable);
     }
 
     // find product by id

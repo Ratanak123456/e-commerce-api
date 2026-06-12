@@ -1,29 +1,30 @@
 package co.istad.productapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import java.nio.channels.FileLock;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @ToString
 
-@Entity(name = "products")
+@Entity(name = "product_tbl")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String dec;
+    private String description;
     private Float price;
-    private Integer userId;
 
-
+    private Integer userId; // user that create the product !
+    // private Integer categoryId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
 }

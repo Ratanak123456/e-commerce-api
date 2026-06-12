@@ -2,24 +2,26 @@ package co.istad.productapi.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
+import org.springframework.context.annotation.EnableMBeanExport;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@ToString
+@Getter
+@Setter
 
-@Entity(name = "categories")
+@Entity(name = "category_tbl")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String description;
+    private Boolean isDeleted;
 
     // one category can have many products
     @OneToMany(mappedBy = "category")

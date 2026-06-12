@@ -1,6 +1,5 @@
 package co.istad.productapi.dto.category.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 

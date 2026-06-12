@@ -3,12 +3,16 @@ package co.istad.productapi.service.implement;
 import co.istad.productapi.dto.product.request.ProductRequest;
 import co.istad.productapi.dto.product.response.ProductResponse;
 import co.istad.productapi.dto.product.request.UpdateProductRequest;
+import co.istad.productapi.entity.Category;
 import co.istad.productapi.entity.Product;
-import co.istad.productapi.rescontroller.repository.ProductRepositoryJPA;
-import co.istad.productapi.rescontroller.repository.ProductRepositoryOld;
+import co.istad.productapi.mapper.ProductMapper;
+import co.istad.productapi.repository.CategoryRepositoryJPA;
+import co.istad.productapi.repository.ProductRepositoryJPA;
 import co.istad.productapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,53 +25,43 @@ public class ProductServiceImplement implements ProductService {
     // inject the repository here
     //private final ProductRepositoryOld productRepositoryOld;
     private final ProductRepositoryJPA productRepository;
-
-
-    private Product mapToEntity(ProductRequest request) {
-        Product product = new Product();
-        product.setName(request.name());
-        product.setDec(request.des());
-        product.setPrice(request.price());
-
-        return product;
-    }
-    // mapToResponse -> convert Entity to Response
-    private ProductResponse mapToResponse(Product product) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getDec(),
-                product.getPrice()
-        );
-    }
-
-    @Override
-    public ProductResponse createProduct(ProductRequest request) {
-        // create entity product from the request
-        var product = mapToEntity(request);
-        // set static userID
-        product.setUserId(1);
-        // insert the data to the table only need to
-        // repository.save(entity) = insert
-        return mapToResponse(productRepository.save(product));
-
-    }
+    private final ProductMapper productMapper;
 
     @Override
     public List<ProductResponse> findAllProducts() {
         // repository.findAll()
         return productRepository.findAll()
                 .stream()
-                .map(this::mapToResponse)
+                .map(productMapper::mapToResponse)
                 .toList();
     }
+
+    @Override
+    public Page<ProductResponse> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(productMapper::mapToResponse);
+    }
+
+
+    @Override
+    public ProductResponse createProduct(ProductRequest request) {
+        // create entity product from the request
+        var product = productMapper.mapToProduct(request);
+        // set static userID
+        product.setUserId(1);
+        // insert the data to the table only need to
+        // repository.save(entity) = insert
+        return productMapper.mapToResponse(productRepository.save(product));
+
+    }
+
 
     @Override
     public ProductResponse findProductById(Integer id) {
         var product =  productRepository.findById(id)
                 .orElseThrow(()-> new NoSuchElementException("Product with ID = "+id+" not found"));
 
-        return mapToResponse(product);
+        return productMapper.mapToResponse(product);
     }
 
     @Override
@@ -78,16 +72,18 @@ public class ProductServiceImplement implements ProductService {
 
         if(request.name()!=null)
             existingProduct.setName(request.name());
-        if(request.dec()!=null)
-            existingProduct.setDec(request.dec());
+        if(request.description()!=null)
+            existingProduct.setDescription(request.description());
         if(request.price()!=null)
             existingProduct.setPrice(request.price());
         // update product
         productRepository.save(existingProduct);
-        return mapToResponse(existingProduct);
+        return productMapper.mapToResponse(existingProduct);
     }
 
 
+
+    // TODO: make it like we delete in the category
     @Override
     public boolean deleteProduct(Integer id) {
         // find if the product exist

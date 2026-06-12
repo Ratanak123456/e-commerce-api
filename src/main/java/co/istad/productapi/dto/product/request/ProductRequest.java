@@ -5,12 +5,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record ProductRequest(
-        @NotBlank(message = "Please Insert Product Name!!")
+        @NotBlank(message = "name is required")
         String name,
-        @NotBlank(message = "Please Insert Description!!")
-        String des,
-        @NotNull(message = "Don't forget to put the price!!")
-        @Positive (message = "Price must be positive!!")
+        @NotBlank(message = "description is required")
+        String description,
+        @NotNull(message = "price is required")
+        @Positive(message = "price must be positive")
         Float price
 ) {
 }

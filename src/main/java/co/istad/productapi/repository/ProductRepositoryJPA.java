@@ -1,4 +1,4 @@
-package co.istad.productapi.rescontroller.repository;
+package co.istad.productapi.repository;
 
 import co.istad.productapi.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

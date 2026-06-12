@@ -14,23 +14,24 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class RestControllerAdvisor {
-    //handle not found issue
+
     @ExceptionHandler(ResourceAlreadyExistException.class)
-    public ResponseEntity<ErrorResponse<?>> handleResourceAlreadyExitException(ResourceAlreadyExistException ex){
-        var response = ErrorResponse.builder()
+    public ResponseEntity<ErrorResponse<?>> handleResourceAlreadyExistException(ResourceAlreadyExistException ex) {
+        var response  = ErrorResponse.builder()
                 .message(ex.getMessage())
                 .timeStamp(LocalDateTime.now())
-                .status(HttpStatus.CONTINUE.value())
+                .status(HttpStatus.CONFLICT.value())
                 .build();
+
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
-
-
+    // handle not found issue
+    // ExceptionHandler(NoSuchElementException.class)
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse<?>> handleNoSuchElementException (NoSuchElementException noSuchElementException){
+    public ResponseEntity<ErrorResponse<?>> handleNoSuchElementException(NoSuchElementException ex) {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
-                        .message(noSuchElementException.getMessage())
+                        .message(ex.getMessage())
                         .status(HttpStatus.NOT_FOUND.value())
                         .timeStamp(LocalDateTime.now())
                         .build(),
@@ -39,16 +40,16 @@ public class RestControllerAdvisor {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<?>> handleMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
-        Map<String , String> errors = new HashMap<>();
-
-        methodArgumentNotValidException.getBindingResult().getFieldErrors().forEach(
-                error -> errors.put(error.getField(), error.getDefaultMessage())
+    public ResponseEntity<ErrorResponse<?>> handleMethodNotValidException(MethodArgumentNotValidException exception ){
+        Map<String,String > errors = new HashMap<>();
+        exception.getBindingResult().getFieldErrors().forEach(
+                error ->
+                        errors.put(error.getField(), error.getDefaultMessage())
         );
-
+        // should use entity response for better message
         return new ResponseEntity<>(
-                ErrorResponse.builder()
-                        .message("Provide data is invalid")
+                ErrorResponse.builder().
+                        message("Provided data is invalid")
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(errors)
                         .timeStamp(LocalDateTime.now())
