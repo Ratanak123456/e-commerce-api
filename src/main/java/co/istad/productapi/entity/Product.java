@@ -3,9 +3,6 @@ package co.istad.productapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.nio.channels.FileLock;
-
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -20,11 +17,13 @@ public class Product {
     private String name;
     private String description;
     private Float price;
+    private Boolean isDeleted;
 
     private Integer userId; // user that create the product !
     // private Integer categoryId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
 
 }

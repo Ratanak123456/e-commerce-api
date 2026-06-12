@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.EnableMBeanExport;
 
 import java.util.List;
 
@@ -26,5 +25,4 @@ public class Category {
     // one category can have many products
     @OneToMany(mappedBy = "category")
     private List<Product> products;
-
 }

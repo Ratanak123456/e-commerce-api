@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,6 +39,12 @@ public class ProductRestController {
     @PatchMapping("/{id}")
     public ProductResponse updateProduct(@PathVariable Integer id, @RequestBody UpdateProductRequest request){
         return productService.updateProduct(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
     }
 
 }
