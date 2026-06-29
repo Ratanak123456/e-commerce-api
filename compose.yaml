@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: postgres_db
+    container_name: ecom_db
     restart: always
     environment:
       # :-default  => default value
@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-123}
       POSTGRES_DB: ${DB_NAME:-james_db}
     ports:
-      - "5433:5432"
+      - "5435:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
