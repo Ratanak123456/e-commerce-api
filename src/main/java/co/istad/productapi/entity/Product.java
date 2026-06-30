@@ -24,10 +24,16 @@ public class Product {
 
     private Integer userId; // user that create the product !
     // private Integer categoryId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+            name = "product_tags",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    @ManyToOne
+    // determined foreign key
     @JoinColumn(name = "category_id")
     private Category category;
-
-
-    private Set<Tag> tags = new HashSet<>();
 }

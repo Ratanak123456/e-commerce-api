@@ -17,16 +17,18 @@ public class TagServiceImplement implements TagService {
 
     private final TagRepository tagRepository;
     private final TagMapper tagMapper;
+
     @Override
     public TagResponse createTag(TagRequest request) {
-        var tag = tagMapper.toEntity(request);
+        var tag =  tagMapper.toEntity(request);
         return tagMapper.toResponse(tagRepository.save(tag));
     }
 
     @Override
     public Page<TagResponse> getAllTags(Pageable pageable) {
-        return tagRepository
+        return  tagRepository
                 .findAll(pageable)
                 .map(tagMapper::toResponse);
     }
+
 }
