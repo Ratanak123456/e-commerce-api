@@ -20,13 +20,14 @@ public class Product {
     private Integer id;
     private String name;
     private String description;
-    private BigDecimal price;
+    // for currency
+    private BigDecimal price;// unitPrice
     private Boolean isAvailable=true;
-    private Boolean isDeleted=false;
-    private String slug;
-    private String thumbnail;
+    private Boolean isDeleted=false; // soft Delete
+    // will create the utilities class in order to generate this
+    private String slug; // for seo purpose
+    private String thumbnail; // for product image
     private Integer qty;
-
     @ManyToMany
     @JoinTable(
             name = "product_tags",
