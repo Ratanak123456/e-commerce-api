@@ -22,5 +22,5 @@ public interface ProductService {
 
     ProductResponse findProductById(Integer id);
     ProductResponse updateProduct(Integer id, UpdateProductRequest request);
-    ProductResponse deleteProduct(Integer id, ProductDeleteRequest request);
+    boolean deleteProduct(Integer id);
 }

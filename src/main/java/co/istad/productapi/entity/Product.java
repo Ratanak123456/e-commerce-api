@@ -3,6 +3,7 @@ package co.istad.productapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,11 +20,13 @@ public class Product {
     private Integer id;
     private String name;
     private String description;
-    private Float price;
-    private Boolean isDeleted;
+    private BigDecimal price;
+    private Boolean isAvailable=true;
+    private Boolean isDeleted=false;
+    private String slug;
+    private String thumbnail;
+    private Integer qty;
 
-    private Integer userId; // user that create the product !
-    // private Integer categoryId;
     @ManyToMany
     @JoinTable(
             name = "product_tags",

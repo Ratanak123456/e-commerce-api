@@ -42,9 +42,4 @@ public class ProductRestController {
         return productService.updateProduct(id, request);
     }
 
-    @PatchMapping("/delete/{id}")
-    public ProductResponse deleteProduct(@PathVariable Integer id, @RequestBody ProductDeleteRequest request){
-        return productService.deleteProduct(id, request);
-    }
-
 }

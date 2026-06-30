@@ -5,8 +5,11 @@ import co.istad.productapi.dto.product.response.ProductResponse;
 import co.istad.productapi.dto.product.request.UpdateProductRequest;
 import co.istad.productapi.dto.product.request.ProductDeleteRequest;
 import co.istad.productapi.entity.Product;
+import co.istad.productapi.entity.Tag;
 import co.istad.productapi.mapper.ProductMapper;
+import co.istad.productapi.repository.CategoryRepositoryJPA;
 import co.istad.productapi.repository.ProductRepositoryJPA;
+import co.istad.productapi.repository.TagRepository;
 import co.istad.productapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +29,15 @@ public class ProductServiceImplement implements ProductService {
     // inject the repository here
     //private final ProductRepositoryOld productRepositoryOld;
     private final ProductRepositoryJPA productRepository;
+    private final CategoryRepositoryJPA categoryRepository;
+    private final TagRepository tagRepository;
+
     private final ProductMapper productMapper;
 
     @Override
     public List<ProductResponse> findAllProducts() {
         // repository.findAll()
-        return productRepository.findByIsDeletedFalse()
+        return productRepository.findAll()
                 .stream()
                 .map(productMapper::mapToResponse)
                 .toList();
@@ -37,7 +45,7 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public Page<ProductResponse> findAllProducts(Pageable pageable) {
-        return productRepository.findByIsDeletedFalse(pageable)
+        return productRepository.findAll(pageable)
                 .map(productMapper::mapToResponse);
     }
 
@@ -46,9 +54,23 @@ public class ProductServiceImplement implements ProductService {
     public ProductResponse createProduct(ProductRequest request) {
         // create entity product from the request
         var product = productMapper.mapToProduct(request);
-        // set static userID
-        product.setUserId(1);
-        product.setIsDeleted(false);
+        // check if the category exists
+        var category = categoryRepository.findById(request.categoryId()).orElseThrow(
+                ()-> new NoSuchElementException("Category with id = "+request.categoryId()+ " not found! ")
+        );
+        product.setCategory(category);
+        // convert Set<Long> to Set<Tag>
+        // getReferenceById vs findById
+        if(request.tagIds() != null &&  !request.tagIds().isEmpty()) {
+            Set<Tag> tags = request.tagIds().stream()
+                    .map(tagId -> tagRepository.getReferenceById(tagId))
+                    .collect(Collectors.toSet());
+//
+            product.setTags(tags);
+        }
+
+
+
         // insert the data to the table only need to
         // repository.save(entity) = insert
         return productMapper.mapToResponse(productRepository.save(product));
@@ -58,7 +80,7 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ProductResponse findProductById(Integer id) {
-        var product =  productRepository.findByIdAndIsDeletedFalse(id)
+        var product =  productRepository.findById(id)
                 .orElseThrow(()-> new NoSuchElementException("Product with ID = "+id+" not found"));
 
         return productMapper.mapToResponse(product);
@@ -68,8 +90,7 @@ public class ProductServiceImplement implements ProductService {
     public ProductResponse updateProduct(Integer id , UpdateProductRequest request) {
         // find existing product
         // repository.findById
-        var existingProduct = productRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(()-> new NoSuchElementException("Product with ID = "+id+" not found"));
+        var existingProduct = productRepository.findById(id).orElseThrow(()-> new NoSuchElementException("Product with ID = "+id+" not found"));
 
         if(request.name()!=null)
             existingProduct.setName(request.name());
@@ -84,14 +105,18 @@ public class ProductServiceImplement implements ProductService {
 
 
 
+    // TODO: make it like we delete in the category
     @Override
-    public ProductResponse deleteProduct(Integer id, ProductDeleteRequest request) {
-        var existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Product with ID = " + id + " not found"));
+    public boolean deleteProduct(Integer id) {
+        // find if the product exist
+        // if it's we delete it and return true
+        // else return false
 
-        existingProduct.setIsDeleted(request.isDeleted());
-        productRepository.save(existingProduct);
-        return productMapper.mapToResponse(existingProduct);
+        if(productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 
