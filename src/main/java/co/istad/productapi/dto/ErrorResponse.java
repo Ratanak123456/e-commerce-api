@@ -1,14 +1,11 @@
 package co.istad.productapi.dto;
-
 import lombok.Builder;
-
 import java.time.LocalDateTime;
-
 @Builder
 public record ErrorResponse<T>(
-        LocalDateTime timeStamp,
+        LocalDateTime timestamp ,
         String message,
-        T error,
+        T errors,
         Integer status
 ) {
 }

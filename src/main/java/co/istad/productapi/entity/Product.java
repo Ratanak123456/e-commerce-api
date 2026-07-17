@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.nio.channels.FileLock;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +24,7 @@ public class Product {
     private String description;
     // for currency
     private BigDecimal price;// unitPrice
+    // validate default value here
     private Boolean isAvailable=true;
     private Boolean isDeleted=false; // soft Delete
     // will create the utilities class in order to generate this
@@ -40,4 +43,5 @@ public class Product {
     // determined foreign key
     @JoinColumn(name = "category_id")
     private Category category;
+
 }

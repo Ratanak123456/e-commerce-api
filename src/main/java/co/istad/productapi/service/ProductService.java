@@ -1,9 +1,9 @@
 package co.istad.productapi.service;
 
-import co.istad.productapi.dto.product.request.ProductRequest;
-import co.istad.productapi.dto.product.response.ProductResponse;
-import co.istad.productapi.dto.product.request.UpdateProductRequest;
-import co.istad.productapi.dto.product.request.ProductDeleteRequest;
+import co.istad.productapi.dto.ProductFilter;
+import co.istad.productapi.dto.product.ProductRequest;
+import co.istad.productapi.dto.product.ProductResponse;
+import co.istad.productapi.dto.product.UpdateProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,7 +17,7 @@ public interface ProductService {
     List<ProductResponse> findAllProducts();
 
     // for the pagination support when get all products
-    Page<ProductResponse> findAllProducts(Pageable pageable);
+    Page<ProductResponse> findAllProducts(Pageable pageable, ProductFilter filter);
     // Page<ProductResponse> name(String keywords, Pageable page);
 
     ProductResponse findProductById(Integer id);

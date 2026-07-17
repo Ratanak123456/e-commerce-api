@@ -1,12 +1,14 @@
 package co.istad.productapi.service;
 
-import co.istad.productapi.dto.user.request.CreateUserRequest;
-import co.istad.productapi.dto.user.response.UserResponse;
-import org.springframework.data.domain.Pageable;
+// Specification
+
+import co.istad.productapi.dto.user.CreateUserRequest;
+import co.istad.productapi.dto.user.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
-    UserResponse createUser (CreateUserRequest createUserRequest);
-    List<UserResponse> getAllUsers ();
+    UserResponse createUser(CreateUserRequest request );
+    List<UserResponse> getAllUsers();
+    UserResponse getUserByKeycloakId(String keycloakId);
 }

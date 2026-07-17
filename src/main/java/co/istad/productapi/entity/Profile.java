@@ -1,5 +1,6 @@
 package co.istad.productapi.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,9 @@ public class Profile {
     private Long id;
     private String profileUrl;
     private String bio;
+    private String gender;
+    private String firstName;
+    private String lastName;
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, referencedColumnName = "id")

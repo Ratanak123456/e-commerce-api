@@ -19,7 +19,7 @@ public class RestControllerAdvisor {
     public ResponseEntity<ErrorResponse<?>> handleResourceAlreadyExistException(ResourceAlreadyExistException ex) {
         var response  = ErrorResponse.builder()
                 .message(ex.getMessage())
-                .timeStamp(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.value())
                 .build();
 
@@ -27,13 +27,13 @@ public class RestControllerAdvisor {
     }
     // handle not found issue
     // ExceptionHandler(NoSuchElementException.class)
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler({NoSuchElementException.class})
     public ResponseEntity<ErrorResponse<?>> handleNoSuchElementException(NoSuchElementException ex) {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
                         .message(ex.getMessage())
                         .status(HttpStatus.NOT_FOUND.value())
-                        .timeStamp(LocalDateTime.now())
+                        .timestamp(LocalDateTime.now())
                         .build(),
                 HttpStatus.NOT_FOUND
         );
@@ -51,8 +51,8 @@ public class RestControllerAdvisor {
                 ErrorResponse.builder().
                         message("Provided data is invalid")
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .error(errors)
-                        .timeStamp(LocalDateTime.now())
+                        .errors(errors)
+                        .timestamp(LocalDateTime.now())
                         .build(),
                 HttpStatus.BAD_REQUEST
         );
