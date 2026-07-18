@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                    // enable scalar
                    .requestMatchers("/api/v1/admin","/api/v1/admin/**").hasRole("ADMIN")
 
-                   .requestMatchers("/api/v1/auth/register").permitAll()
+                   .requestMatchers("/api/v1/auth/register", "/api/v1/auth/forgot-password/**").permitAll()
                    .requestMatchers("/scalar/**", "/v3/api-docs/**").permitAll()
                    .requestMatchers("/api/v1/files/**","/files/**").permitAll()
                    .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()

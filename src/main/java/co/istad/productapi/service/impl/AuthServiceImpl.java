@@ -3,6 +3,7 @@ package co.istad.productapi.service.impl;
 
 import co.istad.productapi.dto.auth.RegisterRequest;
 import co.istad.productapi.dto.auth.RegisterResponse;
+import co.istad.productapi.dto.auth.UserUpdateRequest;
 import co.istad.productapi.dto.user.UserResponse;
 import co.istad.productapi.entity.Profile;
 import co.istad.productapi.entity.User;
@@ -21,6 +22,7 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -148,7 +150,91 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    // TODO:
-    // update the user profile
-    // only the profile owner able to update their profile
+    @Override
+    @Transactional
+    public UserResponse updateUser(String keycloakId, UserUpdateRequest request) {
+        var user = userRepository.findByKeycloakId(keycloakId)
+                .orElseThrow(() -> new NoSuchElementException("User with id " + keycloakId + " not found"));
+        var profile = user.getProfile();
+
+        if (profile == null) {
+            profile = new Profile();
+            profile.setUser(user);
+            user.setProfile(profile);
+        }
+
+        updateUserInKeycloak(keycloakId, request);
+
+        if (request.firstName() != null) {
+            profile.setFirstName(request.firstName());
+        }
+        if (request.lastName() != null) {
+            profile.setLastName(request.lastName());
+        }
+        if (request.gender() != null) {
+            profile.setGender(request.gender());
+        }
+        if (request.biography() != null) {
+            profile.setBio(request.biography());
+        }
+        if (request.profileUrl() != null) {
+            profile.setProfileUrl(request.profileUrl());
+        }
+
+        return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    private void updateUserInKeycloak(String keycloakId, UserUpdateRequest request) {
+        try {
+            var userResource = keycloak.realm(realm).users().get(keycloakId);
+            var userRepresentation = userResource.toRepresentation();
+
+            if (request.firstName() != null) {
+                userRepresentation.setFirstName(request.firstName());
+            }
+            if (request.lastName() != null) {
+                userRepresentation.setLastName(request.lastName());
+            }
+
+            var attributes = userRepresentation.getAttributes() == null
+                    ? new HashMap<String, List<String>>()
+                    : new HashMap<>(userRepresentation.getAttributes());
+            if (request.gender() != null) {
+                attributes.put("gender", List.of(request.gender()));
+            }
+            if (request.biography() != null) {
+                attributes.put("biography", List.of(request.biography()));
+            }
+            userRepresentation.setAttributes(attributes);
+
+            userResource.update(userRepresentation);
+        } catch (Exception ex) {
+            log.error("Error updating user {} in Keycloak", keycloakId, ex);
+            throw new RuntimeException("Error updating user in Keycloak", ex);
+        }
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        try {
+            var users = keycloak.realm(realm).users().searchByEmail(email, true);
+
+            // Keep this response indistinguishable from a real account so the
+            // endpoint does not disclose whether an email address is registered.
+            if (users.isEmpty()) {
+                log.warn("Password reset requested for an unknown email address");
+                return;
+            }
+
+            var keycloakUserId = users.getFirst().getId();
+            log.info("Sending password reset email for Keycloak user {}", keycloakUserId);
+            keycloak.realm(realm)
+                    .users()
+                    .get(keycloakUserId)
+                    .executeActionsEmail(List.of("UPDATE_PASSWORD"));
+        } catch (Exception ex) {
+            log.error("Error sending password reset email", ex);
+            throw new RuntimeException("Error sending password reset email", ex);
+        }
+    }
 }
